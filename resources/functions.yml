@@ -1,0 +1,12 @@
+connectionHandler:
+  handler: service/connectionHandler.handler
+  name: connectionHandler
+  events:
+    - websocket:
+        route: $connect
+    - websocket:
+        route: $disconnect
+    - websocket:
+        route: $default
+    - websocket:
+        route: message
