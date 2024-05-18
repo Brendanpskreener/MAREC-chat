@@ -12,8 +12,8 @@ async function handler(event) {
       await on_disconnect(connectionId)
       break;
     case "message":
-      const callbackUrl = `https://${domainName}/${stage}`
-      await on_message(connectionId, body, callbackUrl)
+      const endpoint = `https://${domainName}/${stage}`
+      await on_message(connectionId, body, endpoint)
       break;
     default:
       break;
