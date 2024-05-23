@@ -5,6 +5,7 @@ async function on_connect(connectionId, user_name, user_id) {
     if (!connectionId) {
       return
     }
+
   } catch (error) {
     console.log(error)
   }
@@ -20,16 +21,16 @@ async function on_disconnect(connectionId) {
   }
 }
 
-async function on_message(connectionId, body, endpoint) {
+async function sendToOne(connectionId, body, endpoint) {
   try {
     if (!connectionId) {
       return
     }
-    const message = JSON.parse(body)
+    //might want to JSON.parse the body, add a timestamp, and stringify it back
     const client = new ApiGatewayManagementApiClient({ endpoint })
     const postParams = {
       'ConnectionId': connectionId,
-      'Data': message.message
+      'Data': body
     }
     const command = new PostToConnectionCommand(postParams)
     await client.send(command)
@@ -38,4 +39,8 @@ async function on_message(connectionId, body, endpoint) {
   }
 }
 
-module.exports = { on_connect, on_disconnect, on_message }
+async function sendToAll(connectionId, body, endpoint) {
+
+}
+
+module.exports = { on_connect, on_disconnect, sendToOne, sendToAll }
