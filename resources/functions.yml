@@ -9,4 +9,6 @@ connectionHandler:
     - websocket:
         route: $default
     - websocket:
-        route: message
+        route: sendPublic
+    - websocket:
+        route: sendPrivate
