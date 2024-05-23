@@ -1,8 +1,9 @@
-const { on_connect, on_disconnect, on_message } = require("./common/utilities")
+const { on_connect, on_disconnect, sendToOne, sendToAll } = require("./common/utilities")
 
 async function handler(event) {
   console.log(event)
   const { body, requestContext: { routeKey, connectionId, domainName, stage }, queryStringParameters = {} } = event
+  const endpoint = `https://${domainName}/${stage}`
   switch (routeKey) {
     case "$connect":
       const { user_name, user_id } = queryStringParameters
@@ -11,9 +12,11 @@ async function handler(event) {
     case "$disconnect":
       await on_disconnect(connectionId)
       break;
-    case "message":
-      const endpoint = `https://${domainName}/${stage}`
-      await on_message(connectionId, body, endpoint)
+    case "sendPublic":
+      await sendToOne(connectionId, body, endpoint)
+      break;
+    case "sendPrivate":
+      await sendToOne()
       break;
     default:
       break;
