@@ -39,8 +39,9 @@ async function sendToOne(connectionId, body, endpoint) {
   }
 }
 
-async function sendToAll(connectionId, body, endpoint) {
-
+async function sendToAll(connectionIds = [], body, endpoint) {
+  const promiseArray = connectionIds.map(connectionId => sendToOne(connectionId, body, endpoint))
+  return Promise.all(promiseArray)
 }
 
 module.exports = { on_connect, on_disconnect, sendToOne, sendToAll }
