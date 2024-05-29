@@ -1,5 +1,7 @@
 const { on_connect, on_disconnect, sendToOne, sendToAll } = require("./common/utilities")
 
+let users = []
+
 async function handler(event) {
   console.log(event)
   const { body, requestContext: { routeKey, connectionId, domainName, stage }, queryStringParameters = {} } = event
@@ -7,13 +9,22 @@ async function handler(event) {
   switch (routeKey) {
     case "$connect":
       const { user_name, user_id } = queryStringParameters
-      await on_connect(connectionId, user_name, user_id)
+      users.push(connectionId)
+      //await on_connect(connectionId, user_name, user_id)
       break;
     case "$disconnect":
-      await on_disconnect(connectionId)
+      const remainingUsers = users.filter(user => user !== connectionId)
+      users = remainingUsers
+      const message = {
+        username: "Server Admin",
+        text: `${connectionId} has left the chat`
+      }
+      const fakeBody = JSON.stringify(message)
+      await sendToAll(users, fakeBody, endpoint)
+      //await on_disconnect(connectionId)
       break;
     case "sendPublic":
-      await sendToOne(connectionId, body, endpoint)
+      await sendToAll(users, body, endpoint)
       break;
     case "sendPrivate":
       await sendToOne()
