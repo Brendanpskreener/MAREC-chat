@@ -22,6 +22,13 @@ async function handler(event) {
       await sendToAll(users, message, endpoint)
       //await on_disconnect(connectionId)
       break;
+    case "joinMessage":
+      const joinMessage = {
+        username: "Server Admin",
+        text: `${connectionId} has joined the chat`
+      }
+      await sendToAll(users, joinMessage, endpoint)
+      break;
     case "sendPublic":
       const { text } = JSON.parse(body)
       await sendToAll(users, { username: connectionId, text }, endpoint)
