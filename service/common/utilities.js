@@ -26,7 +26,6 @@ async function sendToOne(connectionId, body, endpoint) {
     if (!connectionId) {
       return
     }
-    //might want to JSON.parse the body, add a timestamp, and stringify it back
     const client = new ApiGatewayManagementApiClient({ endpoint })
     const data = JSON.stringify(body)
     const postParams = {
