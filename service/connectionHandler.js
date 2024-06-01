@@ -19,12 +19,12 @@ async function handler(event) {
         username: "Server Admin",
         text: `${connectionId} has left the chat`
       }
-      const fakeBody = JSON.stringify(message)
-      await sendToAll(users, fakeBody, endpoint)
+      await sendToAll(users, message, endpoint)
       //await on_disconnect(connectionId)
       break;
     case "sendPublic":
-      await sendToAll(users, body, endpoint)
+      const { text } = JSON.parse(body)
+      await sendToAll(users, { username: connectionId, text }, endpoint)
       break;
     case "sendPrivate":
       await sendToOne()
