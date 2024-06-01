@@ -28,9 +28,10 @@ async function sendToOne(connectionId, body, endpoint) {
     }
     //might want to JSON.parse the body, add a timestamp, and stringify it back
     const client = new ApiGatewayManagementApiClient({ endpoint })
+    const data = JSON.stringify(body)
     const postParams = {
       'ConnectionId': connectionId,
-      'Data': body
+      'Data': data
     }
     const command = new PostToConnectionCommand(postParams)
     await client.send(command)
