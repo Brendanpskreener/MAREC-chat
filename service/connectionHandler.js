@@ -17,7 +17,8 @@ async function handler(event) {
       users = remainingUsers
       const message = {
         username: "Server Admin",
-        text: `${connectionId} has left the chat`
+        text: `${connectionId} has left the chat`,
+        users
       }
       await sendToAll(users, message, endpoint)
       //await on_disconnect(connectionId)
@@ -25,13 +26,19 @@ async function handler(event) {
     case "joinMessage":
       const joinMessage = {
         username: "Server Admin",
-        text: `${connectionId} has joined the chat`
+        text: `${connectionId} has joined the chat`,
+        users
       }
       await sendToAll(users, joinMessage, endpoint)
       break;
     case "sendPublic":
       const { text } = JSON.parse(body)
-      await sendToAll(users, { username: connectionId, text }, endpoint)
+      const publicMessage = {
+        username: connectionId,
+        text,
+        users
+      }
+      await sendToAll(users, publicMessage, endpoint)
       break;
     case "sendPrivate":
       await sendToOne()
