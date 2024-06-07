@@ -1,3 +1,8 @@
+/**
+ * @module connectionHandler
+ * @description Handles the lifecycle state of a websocket client connection
+*/
+
 const { on_connect, on_disconnect, sendToOne, sendToAll } = require("./common/utilities")
 
 let users = []
@@ -17,7 +22,7 @@ async function handler(event) {
       users = remainingUsers
       const message = {
         username: "Server Admin",
-        text: `${connectionId} has left the chat`,
+        text: `${connectionId} disconnected`,
         users
       }
       await sendToAll(users, message, endpoint)
@@ -26,7 +31,7 @@ async function handler(event) {
     case "joinMessage":
       const joinMessage = {
         username: "Server Admin",
-        text: `${connectionId} has joined the chat`,
+        text: `${connectionId} connected`,
         users
       }
       await sendToAll(users, joinMessage, endpoint)
