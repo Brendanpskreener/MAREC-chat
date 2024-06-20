@@ -12,3 +12,6 @@ provider:
 
 functions:
   - ${file(resources/functions.yml)}
+
+resources: 
+  - ${file(resources/dynamo.yml)}
