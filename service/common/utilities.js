@@ -1,47 +1,21 @@
 const { ApiGatewayManagementApiClient, PostToConnectionCommand } = require('@aws-sdk/client-apigatewaymanagementapi')
+const { API_DOMAIN, STAGE } = process.env
+const ENDPOINT = `https://${API_DOMAIN}/${STAGE}`
+const client = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT })
 
-async function on_connect(connectionId, user_name, user_id) {
-  try {
-    if (!connectionId) {
-      return
-    }
-
-  } catch (error) {
-    console.log(error)
+async function sendToOne(connectionId, body) {
+  const data = JSON.stringify(body)
+  const postParams = {
+    'ConnectionId': connectionId,
+    'Data': data
   }
+  const command = new PostToConnectionCommand(postParams)
+  await client.send(command)
 }
 
-async function on_disconnect(connectionId) {
-  try {
-    if (!connectionId) {
-      return
-    }
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function sendToOne(connectionId, body, endpoint) {
-  try {
-    if (!connectionId) {
-      return
-    }
-    const client = new ApiGatewayManagementApiClient({ endpoint })
-    const data = JSON.stringify(body)
-    const postParams = {
-      'ConnectionId': connectionId,
-      'Data': data
-    }
-    const command = new PostToConnectionCommand(postParams)
-    await client.send(command)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function sendToAll(connectionIds = [], body, endpoint) {
-  const promiseArray = connectionIds.map(connectionId => sendToOne(connectionId, body, endpoint))
+async function sendToAll(connectionIds = [], body) {
+  const promiseArray = connectionIds.map(connectionId => sendToOne(connectionId, body))
   return Promise.all(promiseArray)
 }
 
-module.exports = { on_connect, on_disconnect, sendToOne, sendToAll }
+module.exports = { sendToOne, sendToAll }

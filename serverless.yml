@@ -8,6 +8,7 @@ provider:
   runtime: nodejs20.x
   websocketsApiName: ${self:service}-websocketApi
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
- 
+  environment: ${file(resources/env.${opt:stage, 'dev'}.yml)}
+
 functions:
   - ${file(resources/functions.yml)}
