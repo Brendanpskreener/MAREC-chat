@@ -15,3 +15,4 @@ functions:
 
 resources: 
   - ${file(resources/dynamo.yml)}
+  - ${file(resources/cognito.yml)}
