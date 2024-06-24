@@ -12,12 +12,13 @@ async function handler(event) {
   try {
     const { body, routeKey, connectionId, queryStringParameters } = parseEvent(event)
     switch (routeKey) {
-      case "$connect":
-        const { user_name, user_id } = queryStringParameters
+      case "$connect": {
+        //const { user_name, user_id } = queryStringParameters
         users.push(connectionId)
         //await on_connect(connectionId, user_name, user_id)
         break;
-      case "$disconnect":
+      }
+      case "$disconnect": {
         const remainingUsers = users.filter(user => user !== connectionId)
         users = remainingUsers
         const message = {
@@ -28,7 +29,8 @@ async function handler(event) {
         await sendToAll(users, message)
         //await on_disconnect(connectionId)
         break;
-      case "joinMessage":
+      }
+      case "joinMessage": {
         const joinMessage = {
           username: "Server Admin",
           text: `${connectionId} connected`,
@@ -36,7 +38,8 @@ async function handler(event) {
         }
         await sendToAll(users, joinMessage)
         break;
-      case "sendPublic":
+      }
+      case "sendPublic": {
         const { text } = JSON.parse(body)
         const publicMessage = {
           username: connectionId,
@@ -45,9 +48,17 @@ async function handler(event) {
         }
         await sendToAll(users, publicMessage)
         break;
-      case "sendPrivate":
-        await sendToOne()
+      }
+      case "sendPrivate": {
+        const { to, text } = JSON.parse(body)
+        const privateMessage = {
+          username: connectionId,
+          text,
+          users
+        }
+        await sendToOne(to, privateMessage)
         break;
+      }
       default:
         break;
     }
