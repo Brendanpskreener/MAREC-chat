@@ -10,12 +10,10 @@ let users = []
 async function handler(event) {
   console.log(event)
   try {
-    const { body, routeKey, connectionId, queryStringParameters } = parseEvent(event)
+    const { body, routeKey, connectionId } = parseEvent(event)
     switch (routeKey) {
       case "$connect": {
-        //const { user_name, user_id } = queryStringParameters
         users.push(connectionId)
-        //await on_connect(connectionId, user_name, user_id)
         break;
       }
       case "$disconnect": {
@@ -27,7 +25,6 @@ async function handler(event) {
           users
         }
         await sendToAll(users, message)
-        //await on_disconnect(connectionId)
         break;
       }
       case "joinMessage": {
