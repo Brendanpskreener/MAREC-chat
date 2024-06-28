@@ -11,19 +11,19 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       AllowedOAuthFlows:
-        - "code"
+        - implicit
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthScopes:
-        - "email"
-        - "openid"
+        - email
+        - openid
       ClientName: ${self:service}-${self:provider.stage}-user-pool-client
       CallbackURLs:
-        - "http://localhost:3000/chat.html"
+        - http://localhost:3000/chat.html
       ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
       GenerateSecret: false
       SupportedIdentityProviders:
-        - "COGNITO"
+        - COGNITO
       UserPoolId:
         Ref: CognitoUserPool
   CognitoUserPoolDomain:
