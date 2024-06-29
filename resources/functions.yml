@@ -4,6 +4,10 @@ connectionHandler:
   events:
     - websocket:
         route: $connect
+        authorizer: 
+            name: authHandler
+            identitySource:
+                - 'route.request.querystring.Auth'
     - websocket:
         route: $disconnect
     - websocket:
@@ -14,3 +18,6 @@ connectionHandler:
         route: sendPrivate
     - websocket:
         route: joinMessage
+authHandler: 
+    handler: service/authHandler.handler
+    name: authHandler
