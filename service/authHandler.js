@@ -1,5 +1,4 @@
 async function handler(event, context) {
-  console.log('event', event, 'context', context);
   // Your authorization logic here
   const isAuthorized = true; // Simplified authorization logic
 
