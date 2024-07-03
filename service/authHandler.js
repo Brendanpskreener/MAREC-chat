@@ -1,8 +1,19 @@
-async function handler(event, context) {
-  // Your authorization logic here
-  const isAuthorized = true; // Simplified authorization logic
+const { CognitoJwtVerifier } = require("aws-jwt-verify");
 
-  if (isAuthorized) {
+const verifier = CognitoJwtVerifier.create({
+  userPoolId: "us-west-2_V8jAMpVLR",
+  tokenUse: "id",
+  clientId: "4ojucaih0hkhva2k12mlth97qb"
+})
+
+async function handler(event, context) {
+  console.log(event, context)
+  try {
+    const { queryStringParameters: { Auth } } = event
+    const payload = await verifier.verify(Auth)
+    if (!payload) {
+      return 'Unauthorized'
+    }
     return {
       principalId: 'user',
       policyDocument: {
@@ -13,9 +24,9 @@ async function handler(event, context) {
           Resource: event.methodArn,
         }],
       },
-    };
-  } else {
-    throw new Error("Unauthorized"); // This will deny the connection
+    }
+  } catch (error) {
+    return 'Unauthorized'
   }
 }
 
