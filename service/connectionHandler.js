@@ -10,10 +10,9 @@ let users = []
 async function handler(event) {
   console.log(event)
   try {
-    const { body, routeKey, connectionId, queryStringParameters } = parseEvent(event)
+    const { authorizer: { email }, body, routeKey, connectionId } = parseEvent(event)
     switch (routeKey) {
       case "$connect": {
-        const { Auth } = queryStringParameters
         users.push(connectionId)
         break;
       }
@@ -22,7 +21,7 @@ async function handler(event) {
         users = remainingUsers
         const message = {
           username: "Server Admin",
-          text: `${connectionId} disconnected`,
+          text: `${email} disconnected`,
           users
         }
         await sendToAll(users, message)
@@ -31,7 +30,7 @@ async function handler(event) {
       case "joinMessage": {
         const joinMessage = {
           username: "Server Admin",
-          text: `${connectionId} connected`,
+          text: `${email} connected`,
           users
         }
         await sendToAll(users, joinMessage)
@@ -40,7 +39,7 @@ async function handler(event) {
       case "sendPublic": {
         const { text } = JSON.parse(body)
         const publicMessage = {
-          username: connectionId,
+          username: email,
           text,
           users
         }
@@ -50,7 +49,7 @@ async function handler(event) {
       case "sendPrivate": {
         const { to, text } = JSON.parse(body)
         const privateMessage = {
-          username: connectionId,
+          username: email,
           text,
           users
         }

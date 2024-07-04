@@ -19,7 +19,7 @@ async function sendToAll(connectionIds = [], body) {
 }
 
 function parseEvent(event) {
-  const { body, requestContext: { routeKey, connectionId }, queryStringParameters = {} } = event
+  const { body, requestContext: { authorizer = {}, routeKey, connectionId }, queryStringParameters = {} } = event
 
   if (!routeKey || !connectionId) {
     const error = new Error("Invalid Request")
@@ -27,7 +27,7 @@ function parseEvent(event) {
     throw error
   }
 
-  return { body, routeKey, connectionId, queryStringParameters }
+  return { authorizer, body, routeKey, connectionId, queryStringParameters }
 }
 
 
