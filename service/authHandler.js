@@ -14,7 +14,11 @@ async function handler(event, context) {
     if (!payload) {
       return 'Unauthorized'
     }
+    const { email } = payload
     return {
+      context: {
+        email
+      },
       principalId: 'user',
       policyDocument: {
         Version: '2012-10-17',
