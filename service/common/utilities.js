@@ -18,4 +18,17 @@ async function sendToAll(connectionIds = [], body) {
   return Promise.all(promiseArray)
 }
 
-module.exports = { sendToOne, sendToAll }
+function parseEvent(event) {
+  const { body, requestContext: { routeKey, connectionId }, queryStringParameters = {} } = event
+
+  if (!routeKey || !connectionId) {
+    const error = new Error("Invalid Request")
+    error.statusCode = 400
+    throw error
+  }
+
+  return { body, routeKey, connectionId, queryStringParameters }
+}
+
+
+module.exports = { parseEvent, sendToOne, sendToAll }

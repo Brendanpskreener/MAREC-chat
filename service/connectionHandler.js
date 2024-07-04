@@ -3,16 +3,17 @@
  * @description Handles the lifecycle state of a websocket client connection
 */
 
-const { sendToOne, sendToAll } = require("./common/utilities")
+const { parseEvent, sendToOne, sendToAll } = require("./common/utilities")
 
 let users = []
 
 async function handler(event) {
   console.log(event)
   try {
-    const { body, routeKey, connectionId } = parseEvent(event)
+    const { body, routeKey, connectionId, queryStringParameters } = parseEvent(event)
     switch (routeKey) {
       case "$connect": {
+        const { Auth } = queryStringParameters
         users.push(connectionId)
         break;
       }
@@ -78,19 +79,6 @@ async function handler(event) {
     }
   }
 
-}
-
-
-function parseEvent(event) {
-  const { body, requestContext: { routeKey, connectionId }, queryStringParameters = {} } = event
-
-  if (!routeKey || !connectionId) {
-    const error = new Error("Invalid Request")
-    error.statusCode = 400
-    throw error
-  }
-
-  return { body, routeKey, connectionId, queryStringParameters }
 }
 
 module.exports = { handler }
